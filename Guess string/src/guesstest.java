@@ -62,9 +62,10 @@ class MyFrame extends JFrame implements ActionListener{
 	}
 	private boolean CompareWord(String input) {
 		int count=0;
-		for (int List_i = 0; List_i < input.length(); ++List_i) {
-			if (input.charAt(0)==Word.charAt(List_i)) {
-				Word.replace(input.charAt(0), '*');
+		for (int List_i = 0; List_i < Word.length(); ++List_i) {
+			char des = input.charAt(0);
+			if (des ==Word.charAt(List_i)) {
+				Word = Word.replace(des, '*');
 				System.out.println(Word);
 				++count;
 			}
