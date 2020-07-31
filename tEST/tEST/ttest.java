@@ -49,7 +49,8 @@ class ttest {
 
 		// 자주쓰이는 다이얼로그
 //		Object[] options = {"Ok","Cancel"};
-//		JOptionPane.showOptionDialog(f2,"Message","Title", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+//		JOptionPane.showOptionDialog(f2,"Message","Title",
+//		JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 
 	}
 }
