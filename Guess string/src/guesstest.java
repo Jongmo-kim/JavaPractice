@@ -17,7 +17,7 @@ class MyFrame extends JFrame implements ActionListener {
 	String Word;
 	JLabel goal, p3_CurrentTimes;
 
-	int CurrentCount, LimitCount;
+	int CurrentCount_Progress, LimitCount_Progress;
 
 	MyFrame(String s) {
 		super(s);
@@ -34,7 +34,7 @@ class MyFrame extends JFrame implements ActionListener {
 		Word = "programming";
 		p1.add(new JLabel("Word : "));
 		p1.add(goal = new JLabel(Word));
-		goal.setBorder(BorderFactory.createLineBorder(new Color(135,206,235)));
+		goal.setBorder(BorderFactory.createLineBorder(new Color(135, 206, 235)));
 		add(p1, BorderLayout.NORTH);
 
 		// Guess 부분
@@ -42,6 +42,7 @@ class MyFrame extends JFrame implements ActionListener {
 		tf = new JTextField(1);
 		JButton b = new JButton("Enter");
 		b.addActionListener(this);
+		tf.addActionListener(this);
 		p2.add(new JLabel("Guess :"));
 		p2.add(tf);
 		p2.add(b);
@@ -51,14 +52,14 @@ class MyFrame extends JFrame implements ActionListener {
 		// Progress 부분
 		JPanel p3 = new JPanel();
 		JLabel p3_l1, p3_LimitTimes;
-		CurrentCount = 0;
-		LimitCount = Word.length();
+		CurrentCount_Progress = 0;
+		LimitCount_Progress = Word.length();
 
 		p3.add(p3_l1 = new JLabel("Progress :"));
-		p3.add(p3_CurrentTimes = new JLabel(Integer.toString(CurrentCount)));
-		p3.add(p3_LimitTimes = new JLabel("/" + Integer.toString(LimitCount)));
+		p3.add(p3_CurrentTimes = new JLabel(Integer.toString(CurrentCount_Progress)));
+		p3.add(p3_LimitTimes = new JLabel("/" + Integer.toString(LimitCount_Progress)));
 		add(p3, BorderLayout.SOUTH);
-		
+
 		// Menu 부분
 		JMenuBar mb = new JMenuBar();
 		JMenu file;
@@ -67,22 +68,22 @@ class MyFrame extends JFrame implements ActionListener {
 		mb.add(file = new JMenu("File"));
 		mb.add(new JMenu("New"));
 		mb.add(new JMenu("Help"));
-		
+
 		file.add(new JMenuItem("Open"));
 		file.add(new JMenuItem("Save"));
 		file.addSeparator();
 		file.add(quit = new JMenuItem("Quit"));
 		quit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if((JOptionPane.showConfirmDialog(getContentPane(), "종료 하시겠습니까?", "Question", JOptionPane.YES_NO_OPTION,
-						 JOptionPane.QUESTION_MESSAGE))==JOptionPane.OK_OPTION) 
-							System.exit(0);
+				if ((JOptionPane.showConfirmDialog(getContentPane(), "종료 하시겠습니까?", "Question",
+						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)) == JOptionPane.OK_OPTION)
+					System.exit(0);
 			}
 		});
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		
+
 		String TempToButtonString = tf.getText();
 		tf.setText("");
 		if (TempToButtonString.isEmpty() || TempToButtonString.isBlank()) {
@@ -113,11 +114,10 @@ class MyFrame extends JFrame implements ActionListener {
 				++count;
 			}
 		}
-		++CurrentCount;
-		p3_CurrentTimes.setText(Integer.toString(CurrentCount));
+		++CurrentCount_Progress;
+		p3_CurrentTimes.setText(Integer.toString(CurrentCount_Progress));
 		if (count > 0) {
 			goal.setText(Word);
-			;
 			return true;
 		}
 		return false;
@@ -135,7 +135,7 @@ class MyFrame extends JFrame implements ActionListener {
 	}
 
 	private boolean isLimitReached() {
-		if (CurrentCount < LimitCount)
+		if (CurrentCount_Progress < LimitCount_Progress)
 			return false;
 		return true;
 	}
