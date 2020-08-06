@@ -2,27 +2,249 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.*;
 import java.util.Scanner;
+import java.util.concurrent.Semaphore;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-//타이핑 속도 간단하게 계산하는 프로그램
-public class Threadtest {
-
+/*
+ * 세마포, 모니터 방법을 사용해서 스레드가 공유자원을 동시에 사용하는걸 막는 예제
+ * 막지않고 그냥 사용을 하면 값이 이상하게 널뛴다.
+ */
+//싱크로 방법 Synchronized
+class Threadtest {
 	public static void main(String[] args) {
-			Scanner sc = new Scanner(System.in);
-			System.out.println("Type: programming");
-			
-			long t1 = System.currentTimeMillis();
-			String s = sc.next();
-			long t2 = System.currentTimeMillis();
-			
-			if(s.equals("programming"))
-				System.out.println("Elapsed Time: " + (t2-t1) + "msec");
-			else
-				System.out.println("Incorrect");
+		Counter c = new Counter();
+		MyThread up = new MyThread(c, 1);
+		MyThread down = new MyThread(c, -1);
+		up.start();
+		down.start();
+		try {
+		up.join(); 
+		} catch ( InterruptedException e) {}
+		try {
+		down.join();
+		} catch ( InterruptedException e) {}
+		System.out.println("Count :" + c.getCount());
 	}
 }
+
+class Counter {
+	private int cnt;
+	boolean bool;
+  private Semaphore mutex;
+  Counter() {
+  	cnt = 0;
+  	mutex = new Semaphore(1);
+  	bool=true;
+  }
+	synchronized void increment(int i) {
+		cnt = cnt + i;
+	}
+
+	int getCount() {
+		return cnt;
+	}
+}
+
+class MyThread extends Thread {
+	private Counter c;
+	private int amount;
+
+	MyThread(Counter c, int amount) {
+		this.c = c;
+		this.amount = amount;
+	}
+
+	public void run() {
+		for (int List_i = 0; List_i < 100000000; ++List_i){
+			c.increment(amount);
+		}
+	}
+}
+////세마포 방법
+//class Threadtest {
+//	public static void main(String[] args) {
+//		Counter c = new Counter();
+//		MyThread up = new MyThread(c, 1);
+//		MyThread down = new MyThread(c, -1);
+//		up.start();
+//		down.start();
+//		try {
+//		up.join(); 
+//		} catch ( InterruptedException e) {}
+//		try {
+//		down.join();
+//		} catch ( InterruptedException e) {}
+//		System.out.println("Count :" + c.getCount());
+//	}
+//}
+//
+//class Counter {
+//	private int cnt;
+//    private Semaphore mutex;
+//    Counter() {
+//    	cnt = 0;
+//    	mutex = new Semaphore(1);
+//    }
+//	void increment(int i) {
+//		try {
+//		mutex.acquire();
+//		}catch(InterruptedException e) {}
+//		cnt = cnt + i;
+//		mutex.release();
+//	}
+//
+//	int getCount() {
+//		return cnt;
+//	}
+//}
+//
+//class MyThread extends Thread {
+//	private Counter c;
+//	private int amount;
+//
+//	MyThread(Counter c, int amount) {
+//		this.c = c;
+//		this.amount = amount;
+//	}
+//
+//	public void run() {
+//		for (int List_i = 0; List_i < 100000000; ++List_i){
+//			c.increment(amount);
+//		}
+//	}
+//}
+////모니터 sychornized를 사용한 예제
+//public class Threadtest {
+//
+//	public static void main(String[] args) {
+//		RestRoom room = new RestRoom();
+//		MyThread kim = new MyThread(room, "Kim");
+//		MyThread lee = new MyThread(room, "Lee");
+//		kim.start(); lee.start();
+//	}
+//}
+//class RestRoom {
+//    private boolean first;
+//    RestRoom() {
+//    	first = true;
+//    }
+//
+//    //화장실을 번갈아 사용할수 있게끔 만든 코드.
+//	synchronized void use(String name) {
+//		if (first && name.equals("Kim") || !first && name.equals("Lee")) {
+//			try {
+//				wait();//스레드를 재운다
+//			} catch (InterruptedException e) {
+//
+//			}
+//		}
+//		System.out.print(name + "Entered");
+//		System.out.print(name + "Used");
+//		System.out.println(name + "Exited");
+//		first = !first;
+//		notify(); //스레드를 꺠운다
+//	}
+//}
+//class MyThread extends Thread {
+//	private RestRoom room;
+//	private String name;
+//	MyThread(RestRoom room,String name){
+//		this.room = room;
+//		this.name = name;
+//	}
+//	public void run() {
+//		for ( int List_i=0;List_i<3;++List_i)
+//			room.use(name);
+//	}
+//}
+////모니터 sychornized를 사용한 예제
+//public class Threadtest {
+//	public static void main(String[] args) {
+//		RestRoom room = new RestRoom();
+//		MyThread kim = new MyThread(room, "Kim");
+//		MyThread lee = new MyThread(room, "Lee");
+//		kim.start(); lee.start();
+//	}
+//}
+//class RestRoom {
+//
+//	synchronized void use(String name) {
+//		
+//		System.out.print(name + "Entered");
+//		System.out.print(name + "Used");
+//		System.out.println(name + "Exited");
+//	
+//	}
+//}
+//class MyThread extends Thread {
+//	private RestRoom room;
+//	private String name;
+//	MyThread(RestRoom room,String name){
+//		this.room = room;
+//		this.name = name;
+//	}
+//	public void run() {
+//		for ( int List_i=0;List_i<13;++List_i)
+//			room.use(name);
+//	}
+//}
+//다중스레드 상호베타 공유자원 사용문제를 이해하기 위한 예제
+//세마포를 사용한 예제
+//public class Threadtest {
+//	public static void main(String[] args) {
+//		RestRoom room = new RestRoom();
+//		MyThread kim = new MyThread(room, "Kim");
+//		MyThread lee = new MyThread(room, "Lee");
+//		kim.start(); lee.start();
+//	}
+//}
+//class RestRoom {
+//	private Semaphore mutex;
+//	RestRoom() {
+//		mutex = new Semaphore(1);
+//	}
+//	void use(String name) {
+//		try {
+//		mutex.acquire();	
+//		} catch (InterruptedException e) {}
+//		System.out.print(name + "Entered");
+//		System.out.print(name + "Used");
+//		System.out.println(name + "Exited");
+//		mutex.release();
+//	
+//	}
+//}
+//class MyThread extends Thread {
+//	private RestRoom room;
+//	private String name;
+//	MyThread(RestRoom room,String name){
+//		this.room = room;
+//		this.name = name;
+//	}
+//	public void run() {
+//		for ( int List_i=0;List_i<3;++List_i)
+//			room.use(name);
+//	}
+//}
+////타이핑 속도 간단하게 계산하는 프로그램
+//public class Threadtest {
+//
+//	public static void main(String[] args) {
+//			Scanner sc = new Scanner(System.in);
+//			System.out.println("Type: programming");
+//			
+//			long t1 = System.currentTimeMillis();
+//			String s = sc.next();
+//			long t2 = System.currentTimeMillis();
+//			
+//			if(s.equals("programming"))
+//				System.out.println("Elapsed Time: " + (t2-t1) + "msec");
+//			else
+//				System.out.println("Incorrect");
+//	}
+//}
 //// 시간초 재는 프로그램
 //public class Threadtest {
 //
