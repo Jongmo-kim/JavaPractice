@@ -16,11 +16,15 @@ class MyFrame extends JFrame implements ActionListener {
 	JTextField tf;
 	String Word;
 	JLabel goal, p3_CurrentTimes;
-
+	String[] but;
 	int CurrentCount_Progress, LimitCount_Progress;
 
 	MyFrame(String s) {
 		super(s);
+		String[] but = new String[4];
+		for(int List_i=0;List_i<4;++List_i)
+			but[List_i]=Integer.toString(List_i);
+		
 		setSize(400, 250);
 		setLocationRelativeTo(null);
 		setVisible(true);
@@ -83,7 +87,7 @@ class MyFrame extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-
+		System.out.println(but[2]);
 		String TempToButtonString = tf.getText();
 		tf.setText("");
 		if (TempToButtonString.isEmpty() || TempToButtonString.isBlank()) {
