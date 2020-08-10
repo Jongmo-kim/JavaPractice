@@ -14,6 +14,7 @@ public class Puzzle {
 		new MyFrame("test");
 	}
 }
+
 class MyFrame extends JFrame{
 	private CountPanel cp;
 	private MainPanel mp;
