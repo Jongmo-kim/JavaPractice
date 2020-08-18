@@ -20,37 +20,40 @@ class MyFrame extends JFrame{
 	private MainPanel mp;
 	MyFrame(String s){
 		super(s);
+		setDefaultOptions();
+		add(mp = new MainPanel(),BorderLayout.CENTER);
+		add(cp = new CountPanel(mp),BorderLayout.NORTH);
+	}
+	private void setDefaultOptions() {
 		setSize(500,500);
 		setLocationRelativeTo(null);
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		add(mp = new MainPanel(),BorderLayout.CENTER);
-		add(cp = new CountPanel(mp),BorderLayout.NORTH);
-		
 	}
 }
 
 class CountPanel extends JPanel implements Runnable {
 	private JLabel lb;
 	private MainPanel mp;
-	private float cnt;
-	private boolean complete;
+	private float ElapsedTimer;
+	private boolean CheckComplete;
 	CountPanel(MainPanel mp) {
 		setFont(new Font("«—ƒƒπŸ≈¡", Font.BOLD, 20));
-		add(new JLabel("Elapsed Time :"));
-		add(lb = new JLabel(String.valueOf(cnt)));
-		add(new JLabel("√ "));
-		cnt = 0;
-		complete = false;
+		setElapsedTimePanel();
+		ElapsedTimer = 0;
+		CheckComplete = false;
 		this.mp=mp;
 		Thread th = new Thread(this);
 		th.start();
-		
 	}
-
+	void setElapsedTimePanel() {
+		add(new JLabel("Elapsed Time :"));
+		add(lb = new JLabel(String.valueOf(ElapsedTimer)));
+		add(new JLabel("√ "));
+	}
 	void update() {
-		cnt += 0.1;
-		lb.setText(String.format("%.1f",cnt));
+		ElapsedTimer += 0.1;
+		lb.setText(String.format("%.1f",ElapsedTimer));
 			
 	}
 
@@ -59,8 +62,8 @@ class CountPanel extends JPanel implements Runnable {
 			try {
 				update();
 				Thread.sleep(100);
-				if(mp.complete) {
-					JOptionPane.showConfirmDialog(this, "Congrats " + "You Just made it in " + String.format("%.1f",cnt) + "sec", "You made it", JOptionPane.PLAIN_MESSAGE);
+				if(mp.CheckComplete) {
+					JOptionPane.showConfirmDialog(this, "Congrats " + "You Just made it in " + String.format("%.1f",ElapsedTimer) + "sec", "You made it", JOptionPane.PLAIN_MESSAGE);
 					JOptionPane.showConfirmDialog(this, "Program exit", "alert", JOptionPane.PLAIN_MESSAGE);
 					System.exit(0);
 					Thread.sleep(12000000);
@@ -72,13 +75,13 @@ class MainPanel extends JPanel implements ActionListener{
 	private	MyButton[] btns;
 	private String[] str;
 	private int[] arr;
-	public boolean complete;
+	public boolean CheckComplete;
 	MainPanel(){
 		setLayout(new GridLayout(4, 4));
 		btns = new MyButton[16];
 		arr = (new RandomList(15).getList());
 		
-		complete = false;
+		CheckComplete = false;
 		for(int List_i=0;List_i<15;++List_i) {
 			add(btns[List_i]=new MyButton(Integer.toString(List_i),List_i));
 			btns[List_i].setFont(new Font("«—ƒƒπŸ≈¡",Font.BOLD,20));
@@ -91,8 +94,8 @@ class MainPanel extends JPanel implements ActionListener{
 		btns[15].setEnabled(false);
 		btns[15].setVisible(false);
 	}
-	public boolean isComplete() {
-		return complete;
+	public boolean isCheckComplete() {
+		return CheckComplete;
 	}
 	private void ButtonEnableSwitch(MyButton b1,MyButton b2) {
 		String s;
@@ -147,7 +150,7 @@ class MainPanel extends JPanel implements ActionListener{
 		
 		return src;
 	}
-	private boolean CheckComplete() {
+	private boolean CheckCheckComplete() {
 		for(int List_i=0;List_i<15;++List_i) {
 			if(Integer.parseInt(btns[List_i].getText())==(List_i))
 				continue;
@@ -164,8 +167,8 @@ class MainPanel extends JPanel implements ActionListener{
 			deact = temp;
 			ButtonEnableSwitch(act,deact);
 		}
-		if(CheckComplete()) {
-			complete=true;
+		if(CheckCheckComplete()) {
+			CheckComplete=true;
 		}
 			
 	}

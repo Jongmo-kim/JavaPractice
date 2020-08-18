@@ -28,37 +28,52 @@ class HangManPanel extends JPanel {
 		return false;
 	}
 	public void paintComponent(Graphics g) {
-		//»çÇü´ë
+		DrawHangman(g);
+	}
+	private void DrawHangman(Graphics g) {
+		MakeGallow(g);
+		MakeHead(g);
+		MakeBody(g);
+		MakeLeftArm(g);
+		MakeRightArm(g);
+		MakeLeftLeg(g);
+		MakeRightLeg(g);
+	}
+	private void MakeGallow(Graphics g) {
 		g.drawLine(50, 40, 50, 10);
 		g.drawLine(50, 10, 95, 10);
 		g.drawLine(95, 10, 95, 140);
 		g.drawLine(80, 140, 110, 140);
-		
-		
-		//¸Ó¸®
+	}
+	private void MakeHead(Graphics g) {
 		if (CurrentCount<6)
-		g.drawOval(40, 40, 20, 20);
-		
-		//¸öÅë
+			g.drawOval(40, 40, 20, 20);
+	}
+	private void MakeBody(Graphics g) {
 		if (CurrentCount<5)
-		g.drawLine(50, 60, 50, 90);
-		
-		//¿ÞÆÈ
+			g.drawLine(50, 60, 50, 90);
+	}
+	private void MakeLeftArm(Graphics g) {
 		if (CurrentCount<4)
-		g.drawLine(50, 75, 30, 65);
-		
-		//¿À¸¥ÆÈ
+			g.drawLine(50,75, 70, 60);
+	}
+	private void MakeRightArm(Graphics g) {
 		if (CurrentCount<3)
-		g.drawLine(50, 75, 70, 65);
-		
-		//¿Þ´Ù¸®
+			g.drawLine(50, 75, 30, 65);
+	}
+
+	private void MakeLeftLeg(Graphics g) {
 		if (CurrentCount<2)
-		g.drawLine(50, 90, 70, 115);
-		
-		//¿À¸¥´Ù¸®
+			g.drawLine(50, 90, 70, 115);
+	}
+
+	private void MakeRightLeg(Graphics g) {
 		if (CurrentCount<1)
 			g.drawLine(50, 90, 30, 115);
 	}
+	
+
+
 }
 class GuessPanel extends JPanel implements ActionListener{
 	JTextField tf;
